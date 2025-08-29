@@ -1,3 +1,8 @@
-flask==3.0.3
-pillow==10.4.0
-qrcode==7.4.2
+# Core dependencies
+flask>=3.0.0,<4.0.0
+pillow>=10.0.0,<11.0.0
+qrcode[pil]>=7.4.0,<8.0.0
+werkzeug>=3.0.0,<4.0.0
+
+# Optional: Add gunicorn for production deployment
+# gunicorn>=21.0.0,<22.0.0

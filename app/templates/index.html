@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">✨ Unsere Hochzeitsfotos ✨</h2>
+
+{% if items %}
+  <div class="grid">
+    {% for f in items %}
+      <div class="photo-card">
+        <a href="{{ url_for('main.file_raw', filename=f['filename']) }}" target="_blank" title="Original in voller Größe öffnen">
+          <img loading="lazy" src="{{ url_for('main.thumb_raw', thumb=f['thumb']) }}" alt="{{ f['orig_name'] or f['filename'] }}">
+        </a>
+        <div class="card-content">
+          <div class="photo-date">📅 {{ f['created_at'] }}</div>
+          {% if admin %}
+          <form method="post" action="{{ url_for('admin.delete_file') }}" onsubmit="return confirm('Möchtest du dieses Foto wirklich löschen? 🗑️');" style="margin: 0;">
+            <input type="hidden" name="filename" value="{{ f['filename'] }}">
+            <input type="hidden" name="admin_token" value="{{ admin }}">
+            <button class="delete-btn" type="submit">🗑️ Löschen</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <h3 style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; margin: 20px 0;">
+      Noch keine Fotos hochgeladen
+    </h3>
+    <p style="margin-bottom: 30px;">
+      Seid die ersten, die eure schönsten Momente teilt! 📸✨
+    </p>
+    <a href="{{ url_for('main.upload') }}" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+      💕 Erstes Foto hochladen
+    </a>
+  </div>
+{% endif %}
+{% endblock %}

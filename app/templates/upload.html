@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">💕 Hochzeitsfotos hochladen</h2>
+
+<div style="text-align: center; margin-bottom: 40px;">
+  <p style="font-size: 1.1rem; color: var(--wedding-accent); margin-bottom: 15px;">
+    Teilt eure schönsten Momente unserer Hochzeit mit allen! ✨
+  </p>
+  <p style="font-size: 0.95rem; color: var(--wedding-text); opacity: 0.8;">
+    QR Code scannen oder Link teilen, dann eure Lieblingsfotos auswählen und hochladen 📸
+  </p>
+</div>
+
+<div class="upload-form">
+  <form method="post" enctype="multipart/form-data">
+    {% if upload_code_required %}
+      <div class="form-group">
+        <label>🔐 Hochzeitscode eingeben</label>
+        <input name="code" type="password" inputmode="numeric" placeholder="z.B. 2025" required style="text-align: center; font-size: 1.2rem; letter-spacing: 2px;">
+      </div>
+    {% endif %}
+    
+    <div class="form-group">
+      <label>📷 Eure Fotos auswählen</label>
+      <div class="file-upload-area" onclick="document.getElementById('fileInput').click();">
+        <input type="file" id="fileInput" name="files" accept="image/*" multiple required style="display: none;">
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">
+          <strong>Klickt hier oder zieht eure Fotos hierher</strong>
+          <div style="margin-top: 8px; font-size: 0.9rem; opacity: 0.8;">
+            Mehrere Dateien gleichzeitig möglich
+          </div>
+        </div>
+      </div>
+      <div id="fileList" class="file-list"></div>
+      <div style="margin-top: 15px; font-size: 0.9rem; color: var(--wedding-accent); text-align: center;">
+        💡 Max. {{ (config.MAX_CONTENT_LENGTH / (1024*1024))|int }} MB pro Datei • {{ config.ALLOWED_EXTENSIONS|list|sort|join(', ')|upper }}
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+      <button type="submit" class="btn" style="font-size: 1.2rem; padding: 18px 40px; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);">
+        💝 Fotos hochladen
+      </button>
+    </div>
+  </form>
+</div>
+
+<div style="background: rgba(212, 175, 55, 0.1); border-radius: 15px; padding: 25px; margin-top: 30px; text-align: center;">
+  <h4 style="font-family: 'Dancing Script', cursive; color: var(--wedding-primary); margin-bottom: 15px; font-size: 1.5rem;">
+    💌 Liebe Hochzeitsgäste
+  </h4>
+  <p style="color: var(--wedding-text); line-height: 1.7; margin: 0;">
+    Danke, dass ihr unseren besonderen Tag mit uns geteilt habt! Jedes Foto erzählt eine Geschichte 
+    und hilft uns, diese wundervollen Erinnerungen für immer zu bewahren. ❤️
+  </p>
+</div>
+
+<script>
+  // Initialize file upload functionality with config from Flask
+  const uploadConfig = {
+    maxFileSize: {{ config.MAX_CONTENT_LENGTH }},
+    allowedTypes: {{ config.ALLOWED_EXTENSIONS|list|tojson }},
+    maxFileSizeMB: {{ (config.MAX_CONTENT_LENGTH / (1024*1024))|int }}
+  };
+</script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}
